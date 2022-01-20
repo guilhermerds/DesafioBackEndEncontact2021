@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TesteBackendEnContact.Core.Domain.ContactBook;
+using TesteBackendEnContact.Controllers.Models;
 using TesteBackendEnContact.Core.Interface.ContactBook;
 using TesteBackendEnContact.Repository.Interface;
 
@@ -20,9 +20,15 @@ namespace TesteBackendEnContact.Controllers
         }
 
         [HttpPost]
-        public async Task<IContactBook> Post(ContactBook contactBook, [FromServices] IContactBookRepository contactBookRepository)
+        public async Task<ActionResult<IContactBook>> Post(SaveContactBookRequest contactBook, [FromServices] IContactBookRepository contactBookRepository)
         {
-            return await contactBookRepository.SaveAsync(contactBook);
+            return Ok(await contactBookRepository.SaveAsync(contactBook.toContactBook()));
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<IContactBook>> Put(UpdateContactBookRequest contactBook, [FromServices] IContactBookRepository contactBookRepository)
+        {
+            return Ok(await contactBookRepository.UpdateAsync(contactBook.toContactBook()));
         }
 
         [HttpDelete]

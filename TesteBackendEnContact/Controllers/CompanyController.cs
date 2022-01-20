@@ -25,6 +25,12 @@ namespace TesteBackendEnContact.Controllers
             return Ok(await companyRepository.SaveAsync(company.ToCompany()));
         }
 
+        [HttpPut]
+        public async Task<ActionResult<ICompany>> Put(UpdateCompanyRequest company, [FromServices] ICompanyRepository companyRepository)
+        {
+            return Ok(await companyRepository.UpdateAsync(company.ToCompany()));
+        }
+
         [HttpDelete]
         public async Task Delete(int id, [FromServices] ICompanyRepository companyRepository)
         {

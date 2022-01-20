@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
 using Microsoft.Data.Sqlite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,9 +35,21 @@ namespace TesteBackendEnContact.Repository
             return dao.Export();
         }
 
+        public async Task<ICompany> UpdateAsync(ICompany company)
+        {
+            using var connection = new SqliteConnection(databaseConfig.ConnectionString);
+            var dao = new CompanyDao(company);
+
+            if (dao.Id != 0)
+                await connection.UpdateAsync(dao);
+
+            return dao.Export();
+        }
+
         public async Task DeleteAsync(int id)
         {
             using var connection = new SqliteConnection(databaseConfig.ConnectionString);
+            await connection.OpenAsync();
             using var transaction = connection.BeginTransaction();
 
             var sql = new StringBuilder();
@@ -44,6 +57,17 @@ namespace TesteBackendEnContact.Repository
             sql.AppendLine("UPDATE Contact SET CompanyId = null WHERE CompanyId = @id;");
 
             await connection.ExecuteAsync(sql.ToString(), new { id }, transaction);
+            try
+            {
+                await transaction.CommitAsync();
+            }catch(Exception)
+            {
+                await transaction.RollbackAsync();
+            }
+            finally
+            {
+                await connection.CloseAsync();
+            }
         }
 
         public async Task<IEnumerable<ICompany>> GetAllAsync()
@@ -60,7 +84,7 @@ namespace TesteBackendEnContact.Repository
         {
             using var connection = new SqliteConnection(databaseConfig.ConnectionString);
 
-            var query = "SELECT * FROM Conpany where Id = @id";
+            var query = "SELECT * FROM Company where Id = @id";
             var result = await connection.QuerySingleOrDefaultAsync<CompanyDao>(query, new { id });
 
             return result?.Export();

@@ -4,8 +4,9 @@ using TesteBackendEnContact.Core.Interface.ContactBook.Company;
 
 namespace TesteBackendEnContact.Controllers.Models
 {
-    public class SaveCompanyRequest
+    public class UpdateCompanyRequest
     {
+        [Required]
         public int Id { get; set; }
         [Required]
         public int ContactBookId { get; set; }

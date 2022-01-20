@@ -7,6 +7,7 @@ namespace TesteBackendEnContact.Repository.Interface
     public interface IContactBookRepository
     {
         Task<IContactBook> SaveAsync(IContactBook contactBook);
+        Task<IContactBook> UpdateAsync(IContactBook contactBook);
         Task DeleteAsync(int id);
         Task<IEnumerable<IContactBook>> GetAllAsync();
         Task<IContactBook> GetAsync(int id);

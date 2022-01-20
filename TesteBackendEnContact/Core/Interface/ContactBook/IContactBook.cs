@@ -1,8 +1,13 @@
 ﻿namespace TesteBackendEnContact.Core.Interface.ContactBook
 {
-    public interface IContactBook
+    public interface IContact
     {
-        int Id { get; }
-        string Name { get; }
+        public int Id { get; }
+        public int ContactBookId { get; }
+        public int CompanyId { get; }
+        public string Name { get; }
+        public string Phone { get; }
+        public string Email { get; }
+        public string Address { get; }
     }
 }
